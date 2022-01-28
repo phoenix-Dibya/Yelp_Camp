@@ -1,8 +1,11 @@
 const express = require("express");
 const path = require("path");
 const app = express();
+const Joi = require("joi");
 const mongoose = require("mongoose");
+const { campgroundSchema } = require("./views/schemas");
 const Campground = require("./models/campground");
+const Review = require("./models/review");
 const catchAsync = require("./utils/catchAsync");
 const method_override = require("method-override");
 const ejsMate = require("ejs-mate");
@@ -47,7 +50,15 @@ app.get("/campground/new", async (req, res) => {
 app.post(
 	"/campground",
 	catchAsync(async (req, res, next) => {
-		if (!req.body.campground) throw new ExpressError("Invalid Campground", 400);
+		// if (!req.body.campground) throw new ExpressError("Invalid Campground", 400);
+		console.log(req.body);
+		const { error } = campgroundSchema.validate(req.body);
+
+		if (error) {
+			const msg = error.details.map((e) => e.message).join(",");
+			throw new ExpressError(msg, 400);
+		}
+		console.log(error);
 		const camp = new Campground(req.body.campground);
 		await camp.save();
 		res.redirect(`/campground/${camp._id}`);
@@ -67,6 +78,21 @@ app.get(
 		const { id } = req.params;
 		const camp = await Campground.findById(id);
 		res.render("edit", { camp });
+	})
+);
+
+app.post(
+	"/campground/:id/review",
+	catchAsync(async (req, res, next) => {
+		// console.log(req.params);
+		const campground = await Campground.findById(req.params.id);
+		// console.log(campground);
+		const review = await new Review(req.body.review);
+		await review.save()
+		// console.log(review);
+		campground.reviews.push(review);
+		await campground.save();
+		res.redirect(`/campground/${campground._id}`);
 	})
 );
 
@@ -95,7 +121,7 @@ app.all("*", (req, res, next) => {
 app.use((err, req, res, next) => {
 	const { message = "Something went wrong", status = 500 } = err;
 	console.log(err.message);
-	res.status(status).send(err.message);
+	res.status(status).render("error", { err });
 });
 
 app.listen(3000, () => {
