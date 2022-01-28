@@ -3,7 +3,7 @@ const path = require("path");
 const app = express();
 const Joi = require("joi");
 const mongoose = require("mongoose");
-const { campgroundSchema } = require("./views/schemas");
+const { campgroundSchema, reviewSchema } = require("./views/schemas");
 const Campground = require("./models/campground");
 const Review = require("./models/review");
 const catchAsync = require("./utils/catchAsync");
@@ -47,6 +47,17 @@ app.get("/campground/new", async (req, res) => {
 	res.render("new");
 });
 
+const reviewValidate = (req, res, next) => {
+	const { error } = reviewSchema.validate(req.body);
+
+	if (error) {
+		const msg = error.details.map((e) => e.message).join(",");
+		throw new ExpressError(msg, 400);
+	} else {
+		next();
+	}
+};
+
 app.post(
 	"/campground",
 	catchAsync(async (req, res, next) => {
@@ -68,7 +79,7 @@ app.get(
 	"/campground/:id",
 	catchAsync(async (req, res) => {
 		const { id } = req.params;
-		const camp = await Campground.findById(id);
+		const camp = await Campground.findById(id).populate("reviews");
 		res.render("show", { camp });
 	})
 );
@@ -83,12 +94,13 @@ app.get(
 
 app.post(
 	"/campground/:id/review",
+	reviewValidate,
 	catchAsync(async (req, res, next) => {
 		// console.log(req.params);
 		const campground = await Campground.findById(req.params.id);
 		// console.log(campground);
 		const review = await new Review(req.body.review);
-		await review.save()
+		await review.save();
 		// console.log(review);
 		campground.reviews.push(review);
 		await campground.save();

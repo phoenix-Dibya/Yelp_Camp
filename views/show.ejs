@@ -34,7 +34,8 @@
 		<div>
 			<% for (let review of camp.reviews) {%>
 			<ul>
-				<li><%= review %></li>
+				<li><%= review.rating %></li>
+				<li><%= review.body %></li>
 			</ul>
 			<% } %>
 		</div>
@@ -66,9 +67,7 @@
 					rows="3"
 					required
 				></textarea>
-				<div class="valid-feedback">
-					Look good!
-				</div>
+				<div class="valid-feedback">Look good!</div>
 			</div>
 			<button class="btn btn-success" type="submit">Submit</button>
 		</form>
