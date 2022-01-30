@@ -48,6 +48,7 @@ app.get("/campground/new", async (req, res) => {
 });
 
 const reviewValidate = (req, res, next) => {
+	// console.log(req.body);
 	const { error } = reviewSchema.validate(req.body);
 
 	if (error) {

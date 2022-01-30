@@ -31,14 +31,6 @@
 				</div>
 			</div>
 		</div>
-		<div>
-			<% for (let review of camp.reviews) {%>
-			<ul>
-				<li><%= review.rating %></li>
-				<li><%= review.body %></li>
-			</ul>
-			<% } %>
-		</div>
 		<h2>Leave a Review</h2>
 		<form
 			action="/campground/<%= camp._id %>/review "
@@ -69,7 +61,16 @@
 				></textarea>
 				<div class="valid-feedback">Look good!</div>
 			</div>
-			<button class="btn btn-success" type="submit">Submit</button>
+			<button class="btn btn-success mb-3" type="submit">Submit</button>
 		</form>
+
+		<% for (let review of camp.reviews) {%>
+		<div class="card col-md-6 mb-3">
+			<div class="card-body">
+				<p>Rating: <%= review.rating %></p>
+				<p>Review: <%= review.body %></p>
+			</div>
+		</div>
+		<% } %>
 	</div>
 </div>
