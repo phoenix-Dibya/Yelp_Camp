@@ -14,7 +14,7 @@
 				<input
 					class="form-control"
 					type="text"
-					name="title"
+					name="campground[title]"
 					id="title"
 					value="<%= camp.title %>"
 					required
@@ -25,7 +25,7 @@
 				<input
 					class="form-control"
 					type="text"
-					name="location"
+					name="campground[location]"
 					id="location"
 					value="<%= camp.location %>"
 					required
@@ -36,7 +36,7 @@
 				<input
 					class="form-control"
 					type="text"
-					name="image"
+					name="campground[image]"
 					id="image"
 					value="<%= camp.image %> "
 					required
@@ -50,7 +50,7 @@
 						type="text"
 						class="form-control"
 						id="price"
-						name="price"
+						name="campground[price]"
 						value="<%= camp.price %>"
 						required
 					/>
@@ -60,7 +60,7 @@
 				<label class="form-label" for="description">Description</label>
 				<textarea
 					class="form-control"
-					name="description"
+					name="campground[description]"
 					id="description"
 					required
 				>

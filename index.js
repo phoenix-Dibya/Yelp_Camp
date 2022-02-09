@@ -8,6 +8,7 @@ const reviewRouter = require("./routes/reviews");
 const method_override = require("method-override");
 const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError");
+const flash = require("connect-flash");
 
 mongoose
 	.connect("mongodb://localhost:27017/yelp-camp", {
@@ -45,6 +46,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(method_override("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(session(sessionConfig));
+app.use(flash());
+
+app.use((req, res, next) => {
+	res.locals.success = req.flash("success");
+	next();
+});
 
 app.use("/", campgroundRouter);
 app.use("/campground", campgroundRouter);
