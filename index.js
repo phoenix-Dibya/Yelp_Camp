@@ -71,10 +71,14 @@ app.get("/fakeUser", async (req, res) => {
     res.send(newUser);
 });
 
+// app.use("/", userRouter);
 app.use("/", userRouter);
-app.use("/", campgroundRouter);
 app.use("/campground", campgroundRouter);
 app.use("/campground/:id/review", reviewRouter);
+
+app.get("/", (req, res) => {
+    res.render("home1");//for homepage
+});
 
 app.all("*", (req, res, next) => {
     throw new ExpressError("Page not found", 404);
