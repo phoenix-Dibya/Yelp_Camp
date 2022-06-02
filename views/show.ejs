@@ -36,45 +36,45 @@
             <span class="visually-hidden">Next</span>
         </button>
         <% } %>
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title"><%= camp.title %></h5>
-                <p class="card-text"><%= camp.description %></p>
-            </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                    <b>Location: </b><%= camp.location %>
-                </li>
-                <li class="list-group-item"><b>Price: </b><%= camp.price %></li>
-                <li class="list-group-item">
-                    <b>Author: </b><%= camp.author.username%>
-                </li>
-            </ul>
-            <% if (currentUser && camp.author.equals(currentUser._id)) {%>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-auto">
-                        <a
-                            href="/campground/<%= camp._id %>/edit"
-                            role="button"
-                            class="card-link btn btn-info btn-sm"
-                            >Edit</a
-                        >
-                    </div>
-                    <div class="col-md-auto">
-                        <form
-                            action="/campground/<%= camp._id %>?_method=DELETE"
-                            method="POST"
-                        >
-                            <button class="btn btn-danger btn-sm" type="submit">
-                                Delete
-                            </button>
-                        </form>
-                    </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title"><%= camp.title %></h5>
+            <p class="card-text"><%= camp.description %></p>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <b>Location: </b><%= camp.location %>
+            </li>
+            <li class="list-group-item"><b>Price: </b><%= camp.price %></li>
+            <li class="list-group-item">
+                <b>Author: </b><%= camp.author.username%>
+            </li>
+        </ul>
+        <% if (currentUser && camp.author.equals(currentUser._id)) {%>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-auto">
+                    <a
+                        href="/campground/<%= camp._id %>/edit"
+                        role="button"
+                        class="card-link btn btn-info btn-sm"
+                        >Edit</a
+                    >
+                </div>
+                <div class="col-md-auto">
+                    <form
+                        action="/campground/<%= camp._id %>?_method=DELETE"
+                        method="POST"
+                    >
+                        <button class="btn btn-danger btn-sm" type="submit">
+                            Delete
+                        </button>
+                    </form>
                 </div>
             </div>
-            <% } %>
         </div>
+        <% } %>
     </div>
 </div>
 

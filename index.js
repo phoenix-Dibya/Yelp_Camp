@@ -1,7 +1,12 @@
+if (process.env.NODE_ENV !== "production") {
+    require("dotenv").config();
+}
+
 const express = require("express");
 const path = require("path");
 const app = express();
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 const mongoose = require("mongoose");
 const userRouter = require("./routes/user");
 const campgroundRouter = require("./routes/campground");
@@ -13,9 +18,17 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user");
-
+const mongoSanitize = require("express-mongo-sanitize");
+const db_url = process.env.atlas_url || "mongodb://localhost:27017/yelp-camp";
+const secret = process.env.SECRET || "thisisagoodsecret";
+const store = MongoStore.create({
+    secret: secret,
+    mongoUrl: db_url,
+    touchAfter: 24 * 60 * 60,
+});
+// mongodb://localhost:27017/yelp-camp
 mongoose
-    .connect("mongodb://localhost:27017/yelp-camp", {
+    .connect(db_url, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     })
@@ -33,7 +46,8 @@ db.once("open", () => {
 });
 
 const sessionConfig = {
-    secret: "thisisagoodsecret",
+    store: store,
+    secret: secret,
     resave: true,
     saveUninitialized: true,
     cookie: {
@@ -53,7 +67,7 @@ app.use(session(sessionConfig));
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
-
+app.use(mongoSanitize());
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
@@ -77,7 +91,7 @@ app.use("/campground", campgroundRouter);
 app.use("/campground/:id/review", reviewRouter);
 
 app.get("/", (req, res) => {
-    res.render("home1");//for homepage
+    res.render("home1"); //for homepage
 });
 
 app.all("*", (req, res, next) => {
