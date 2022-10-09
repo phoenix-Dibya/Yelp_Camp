@@ -1,6 +1,6 @@
 # Yelp_Camp
 
-An app where users can add details like location,photos,comments of the places they have visited.
+An app where users can add details like location,photos,comments of the places they have visited. This application is made using HTML,CSS,JS.
 Libraries/Techonologies used for this app:
 
 	1.Node JS
